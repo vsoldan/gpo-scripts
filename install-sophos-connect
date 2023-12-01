@@ -1,0 +1,25 @@
+REM --------------------------------------------------------------------------
+REM Install the latest Sophos Connect on user computers
+REM Author: Viorel Soldan
+REM Date: 30.11.2023
+REM --------------------------------------------------------------------------
+@echo off
+REM --------------------------------------------------------------------------
+SET Sophos_Connect="Sophos\Connect\scvpn.exe"
+SET Sophos_Connect_MSI="SophosConnect_2.2.75_IPsec_and_SSLVPN.msi"
+REM --------------------------------------------------------------------------
+REM DO NOT EDIT BELOW THIS POINT 
+REM --------------------------------------------------------------------------
+IF "%PROCESSOR_ARCHITECTURE%" == "x86" GOTO X86_PROG
+IF NOT EXIST "%ProgramFiles(x86)%\%Sophos_Connect%" GOTO INSTALL
+exit /b 0
+
+:X86_PROG
+IF NOT EXIST "%ProgramFiles%\%Sophos_Connect%" GOTO INSTALL
+exit /b 0
+
+:INSTALL
+xcopy /y /f "\\srvfsro1\Deploy\Sophos Connect\%Sophos_Connect_MSI%" "C:\Company\"
+msiexec.exe /i C:\Company\%Sophos_Connect_MSI% /QN
+del /f /q /s "C:\Company\%Sophos_Connect_MSI%"
+Popd
